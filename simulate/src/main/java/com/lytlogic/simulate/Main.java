@@ -8,7 +8,7 @@ public class Main {
         Thread panelThread = new Thread(p);
         JFrame frame = new JFrame();
         frame.add(p);
-        frame.setSize(Constant.FRAME_WIDTH, Constant.FRAME_HEIGHT);
+        frame.setSize(Constant.FRAME_WIDTH + Constant.INFO_WIDTH, Constant.FRAME_HEIGHT);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setTitle("simulation");

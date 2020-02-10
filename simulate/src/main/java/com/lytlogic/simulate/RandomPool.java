@@ -22,4 +22,23 @@ public class RandomPool {
         return instance.random.nextDouble();
     }
 
+    static double[] GROUP_MEMBERS = { 0, 0.1453, 0.389, 0.6576, 0.8332, 0.9335, 0.9755, 0.9898, 0.9954, 0.9977, 1 };
+
+    public static int randomIncubation() {
+        int d;
+        do {
+            d = (int) (Constant.INCUBATION
+                    + (Constant.MAX_INCUBATION - Constant.INCUBATION) / 3 * RandomPool.nextGaussian());
+        } while (d < 0);
+        return d;
+    }
+
+    public static int randomGroupMemberNumbers() {
+        double p = nextDouble();
+        int n = 0;
+        do {
+            n++;
+        } while (n < 10 && GROUP_MEMBERS[n] < p);
+        return n;
+    }
 }

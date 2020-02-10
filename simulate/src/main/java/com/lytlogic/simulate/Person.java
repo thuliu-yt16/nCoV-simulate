@@ -41,9 +41,7 @@ public class Person {
 
     public void expose(int day) {
         exposedTime = day;
-        do {
-            incubation = (int) (Constant.INCUBATION + RandomPool.nextGaussian() * 2);
-        } while (incubation < 1);
+        incubation = RandomPool.randomIncubation();
         state = State.Exposed;
     }
 

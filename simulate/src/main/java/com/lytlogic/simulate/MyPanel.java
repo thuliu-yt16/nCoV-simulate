@@ -10,7 +10,7 @@ public class MyPanel extends JPanel implements Runnable {
 
     public MyPanel() {
         super();
-        this.setBackground(new Color(0x444444));
+        this.setBackground(new Color(Constant.COLOR_BACKGROUND));
     }
 
     @Override
@@ -27,34 +27,58 @@ public class MyPanel extends JPanel implements Runnable {
             }
             switch (person.state) {
             case Normal:
-                g.setColor(new Color(0xdddddd));
+                g.setColor(new Color(Constant.COLOR_NORMAL));
                 break;
             case Infected:
-                g.setColor(new Color(0xdd0000));
                 nInfected++;
+                continue;
+            case Exposed:
+                nExposed++;
+                continue;
+            }
+            switch (person.actionState) {
+            case Normal:
+                break;
+            case Isolated:
+                nIsolated++;
+                continue;
+            }
+            g.fillOval(person.x + Constant.INFO_WIDTH, person.y, 2, 2);
+        }
+
+        for (Person person : persons) {
+            if (person.x < 0 || person.x >= Constant.FRAME_WIDTH || person.y < 0 || person.y >= Constant.FRAME_HEIGHT) {
+                continue;
+            }
+            switch (person.state) {
+            case Normal:
+                continue;
+            case Infected:
+                g.setColor(new Color(Constant.COLOR_INFECTED));
                 break;
             case Exposed:
-                g.setColor(new Color(0x00dddd));
-                nExposed++;
+                g.setColor(new Color(Constant.COLOR_EXPOSED));
                 break;
             }
             switch (person.actionState) {
             case Normal:
-                g.fillOval(person.x, person.y, 3, 3);
                 break;
             case Isolated:
-                g.fillRect(person.x, person.y, 3, 3);
-                nIsolated++;
+                g.setColor(new Color(Constant.COLOR_ISOLATED));
                 break;
             }
+            g.fillOval(person.x + Constant.INFO_WIDTH, person.y, 3, 3);
         }
 
-        g.setColor(new Color(0xffc125));
-        g.drawString("Day:      " + World.getInstance().day, 20, 20);
-        g.drawString("All:      " + World.getInstance().persons.size(), 20, 40);
-        g.drawString("Infected: " + nInfected, 20, 60);
-        g.drawString("Exposed:  " + nExposed, 20, 80);
-        g.drawString("Isolated: " + nIsolated, 20, 100);
+        g.setColor(new Color(Constant.COLOR_NORMAL));
+        g.drawString("天数:      " + World.getInstance().day, 20, 20);
+        g.drawString("全部:      " + World.getInstance().persons.size(), 20, 40);
+        g.setColor(new Color(Constant.COLOR_INFECTED));
+        g.drawString("感染人数: " + nInfected, 20, 60);
+        g.setColor(new Color(Constant.COLOR_EXPOSED));
+        g.drawString("潜伏人数:  " + nExposed, 20, 80);
+        g.setColor(new Color(Constant.COLOR_ISOLATED));
+        g.drawString("隔离人数: " + nIsolated, 20, 100);
     }
 
     public static int worldTime = 0;

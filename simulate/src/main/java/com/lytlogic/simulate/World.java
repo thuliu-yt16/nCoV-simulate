@@ -53,22 +53,26 @@ public class World {
 
     public void initGroups() {
 
-        double[] cx = { 0.7, 0.34, 0.77, 0.16, 0.64, 0.78, 0.57, 0.23, 0.51, 0.37 };
-        double[] cy = { 0.15, 0.45, 0.89, 0.38, 0.74, 0.9, 0.57, 0.12, 0.53, 0.29 };
+        // double[] cx = { 0.7, 0.34, 0.77, 0.16, 0.64, 0.78, 0.57, 0.23, 0.51, 0.37 };
+        // double[] cy = { 0.15, 0.45, 0.89, 0.38, 0.74, 0.9, 0.57, 0.12, 0.53, 0.29 };
 
         for (int c = 0; c < Constant.COMMUNITY_NUMBER; c++) {
             int gn = Constant.GROUP_NUMBER;
+            double cx = RandomPool.nextDouble();
+            double cy = RandomPool.nextDouble();
 
             for (int i = 0; i < gn; i++) {
-                int gx = (int) ((cx[c] + 0.05 * RandomPool.nextGaussian()) * Constant.FRAME_WIDTH);
-                int gy = (int) ((cy[c] + 0.05 * RandomPool.nextGaussian()) * Constant.FRAME_HEIGHT);
+                double gx = cx + Constant.COMMUNITY_RANGE * RandomPool.nextGaussian();
+                double gy = cy + Constant.COMMUNITY_RANGE * RandomPool.nextGaussian();
 
-                Group g = new Group(gx, gy);
-                int pn = RandomPool.nextInt(4) + 2;
+                int gx_int = (int) (gx * Constant.FRAME_WIDTH);
+                int gy_int = (int) (gy * Constant.FRAME_HEIGHT);
+                Group g = new Group(gx_int, gy_int);
+                int pn = RandomPool.randomGroupMemberNumbers();
 
                 for (int j = 0; j < pn; j++) {
-                    int px = gx + (int) (10 * RandomPool.nextGaussian());
-                    int py = gy + (int) (10 * RandomPool.nextGaussian());
+                    int px = (int) ((gx + Constant.GROUP_RANGE * RandomPool.nextGaussian()) * Constant.FRAME_WIDTH);
+                    int py = (int) ((gy + Constant.GROUP_RANGE * RandomPool.nextGaussian()) * Constant.FRAME_HEIGHT);
                     Person p = new Person(px, py);
                     p.group = g;
                     g.members.add(p);
@@ -103,7 +107,6 @@ public class World {
 
     void addHangout() {
         int nHangout = (int) (Constant.HANGOUT_RATE * activePersons.size() / Constant.HANGOUT_MEMBERS);
-        System.out.println(nHangout);
         for (int i = 0; i < nHangout; i++) {
             Set<Integer> members = new HashSet();
             List<Person> ps = new ArrayList();
@@ -134,7 +137,7 @@ public class World {
         events.clear();
         activePersons.clear();
         inactivePersons.clear();
-        Collections.shuffle(persons);
+        // Collections.shuffle(persons);
         for (Person p : persons) {
             if (p.isIsolated()) {
                 inactivePersons.add(p);
