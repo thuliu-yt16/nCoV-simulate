@@ -21,7 +21,7 @@ public class NeighborMeal implements Event {
     public void act() {
         int nInfected = 0;
         for (Person p : persons) {
-            if (p.isInfected()) {
+            if (p.carryVirus()) {
                 nInfected++;
             }
         }

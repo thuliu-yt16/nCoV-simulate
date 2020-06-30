@@ -8,17 +8,20 @@ public class Hangout implements Event {
     public int y;
     public int time;
 
-    public Hangout(List<Person> persons, int t) {
-        this.persons.addAll(persons);
+    public Hangout(List<Person> ps, int t) {
+        for (Person p : ps) {
+            if (!p.isIsolated())
+                persons.add(p);
+        }
         x = 0;
         y = 0;
-        for (Person p : persons) {
+        for (Person p : ps) {
             x += p.x;
             y += p.y;
         }
 
-        x /= persons.size();
-        y /= persons.size();
+        x /= ps.size();
+        y /= ps.size();
         time = t;
     }
 
@@ -35,8 +38,9 @@ public class Hangout implements Event {
                 }
                 if (j != i) {
                     Person thatp = persons.get(j);
-                    if (thatp.carryVirus() && RandomPool
-                            .nextDouble() < Math.pow(2, 1 - thisp.distance(thatp) / Constant.SAFE_DISTANCE) - 1) {
+                    if (thatp.carryVirus() && RandomPool.nextDouble() < (thatp.unusual ? 5 : 1)
+                            * (Math.pow(2, 1 - thisp.distance(thatp) / Constant.SAFE_DISTANCE) - 1)
+                            * Constant.HANGOUT_INFECTED_RATE) {
                         w = true;
                     }
                 }
@@ -45,7 +49,7 @@ public class Hangout implements Event {
         }
 
         for (int i = 0; i < persons.size(); i++) {
-            if (willExpose.get(i)) {
+            if (willExpose.get(i) && !persons.get(i).carryVirus()) {
                 persons.get(i).expose(time);
             }
         }

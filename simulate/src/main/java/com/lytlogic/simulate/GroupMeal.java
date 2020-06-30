@@ -9,7 +9,8 @@ public class GroupMeal implements Event {
     public int time;
 
     public GroupMeal(Group g, int t) {
-        persons.addAll(g.activeMembers());
+        // persons.addAll(g.activeMembers());
+        persons.addAll(g.members);
         x = g.cx;
         y = g.cy;
         time = t;
@@ -24,7 +25,7 @@ public class GroupMeal implements Event {
     public void act() {
         int nInfected = 0;
         for (Person p : persons) {
-            if (p.isInfected() && !p.isIsolated()) {
+            if (p.carryVirus()) {
                 nInfected++;
             }
         }

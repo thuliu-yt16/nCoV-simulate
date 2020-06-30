@@ -8,6 +8,8 @@ public class Person {
     public int y;
 
     public Group group;
+    public World world;
+    public boolean unusual;
 
     public enum State {
         Normal, Exposed, Infected
@@ -26,16 +28,16 @@ public class Person {
     public int infectedTime = -1;
     public int isolatedDelay = -1;
 
-    public Person(int x, int y) {
+    public Person(int x, int y, World w, boolean u) {
         this.x = x;
         this.y = y;
+        this.world = w;
+        this.unusual = u;
     }
 
     private void infect(int day) {
         infectedTime = day;
-        do {
-            isolatedDelay = (int) (Constant.ISOLATED_DELAY + RandomPool.nextGaussian());
-        } while (isolatedDelay < 0);
+        isolatedDelay = RandomPool.randomIsolatedDelay();
         state = State.Infected;
     }
 
@@ -48,8 +50,10 @@ public class Person {
     public void update(int day) {
         if (state == State.Exposed && day >= (incubation + exposedTime)) {
             infect(day);
-        } else if (state == State.Infected && actionState == ActionState.Normal && day >= (infectedTime + isolatedDelay)
-                && Constant.ISOLATED_STRATEGY) {
+        }
+
+        if (state == State.Infected && actionState == ActionState.Normal && day >= (infectedTime + isolatedDelay)
+                && world.isolatedStrategy) {
             isolate(day);
             if (Constant.FAMILY_ISOLATED) {
                 for (Person p : group.members) {
